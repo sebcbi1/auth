@@ -26,5 +26,6 @@ class SessionAuthentication implements AuthenticationMethodInterface
         if (!empty($this->credentials->getUserId())) {
             return $this->credentials->getUserId();
         }
+        return false;
     }
 }

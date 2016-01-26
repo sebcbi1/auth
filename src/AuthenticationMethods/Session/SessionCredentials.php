@@ -23,20 +23,32 @@ class SessionCredentials extends Credentials
     private $sessionId;
 
 
-    public static function fromCookie()
+    public function __construct($sessionId = null)
     {
-        $credentials = new self();
-        if (isset($_COOKIE[session_name()])) {
-            if (PHP_SESSION_NONE === session_status()) {
-                session_start();
-            }
-            $credentials->setSessionId($_COOKIE[session_name()]);
-
-            if (!empty($_SESSION['userId'])) {
-                $credentials->setUserId($_SESSION['userId']);
+        if (php_sapi_name() == 'cli') {
+            ini_set('session.use_cookies', 0);
+            ini_set("session.use_only_cookies", 0);
+            ini_set("session.cache_limiter", "");
+        }
+        if (!empty($sessionId)) {
+            $this->sessionId = $sessionId;
+        } else {
+            if (isset($_COOKIE) && isset($_COOKIE[session_name()])) {
+                $this->sessionId = $_COOKIE[session_name()];
             }
         }
-        return $credentials;
+    }
+
+    private function sessionStart() {
+        if (PHP_SESSION_NONE === session_status()) {
+            if (!empty($this->sessionId)) {
+                session_id($this->sessionId);
+            }
+            session_start();
+            if (empty($this->sessionId)) {
+                $this->sessionId = session_id();
+            }
+        }
     }
 
     /**
@@ -44,7 +56,8 @@ class SessionCredentials extends Credentials
      */
     public function getUserId()
     {
-        return $this->userId;
+        $this->sessionStart();
+        return $_SESSION['userId'];
     }
 
     /**
@@ -53,8 +66,9 @@ class SessionCredentials extends Credentials
      */
     public function setUserId($userId)
     {
+        $this->sessionStart();
         $this->userId = $userId;
-
+        $_SESSION['userId'] = $this->userId;
         return $this;
     }
 
@@ -63,19 +77,8 @@ class SessionCredentials extends Credentials
      */
     public function getSessionId()
     {
+        $this->sessionStart();
         return $this->sessionId;
     }
-
-    /**
-     * @param string $sessionId
-     * @return SessionCredentials
-     */
-    public function setSessionId($sessionId)
-    {
-        $this->sessionId = $sessionId;
-
-        return $this;
-    }
-
 
 }
