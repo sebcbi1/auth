@@ -12,10 +12,6 @@ use Auth\Credentials;
 
 class PasswordCredentials extends Credentials
 {
-    /**
-     * @var int
-     */
-    private $userId;
 
     /**
      * @var string
@@ -27,23 +23,10 @@ class PasswordCredentials extends Credentials
      */
     private $password;
 
-    /**
-     * @return int
-     */
-    public function getUserId()
-    {
-        return $this->userId;
-    }
 
-    /**
-     * @param int $userId
-     * @return PasswordCredentials
-     */
-    public function setUserId($userId)
+    public function __construct(PasswordGatewayInterface $gateway)
     {
-        $this->userId = $userId;
-
-        return $this;
+        $this->authenticationMethod = new PasswordAuthentication($this, $gateway);
     }
 
     /**
@@ -61,7 +44,6 @@ class PasswordCredentials extends Credentials
     public function setEmail($email)
     {
         $this->email = $email;
-
         return $this;
     }
 
@@ -80,11 +62,7 @@ class PasswordCredentials extends Credentials
     public function setPassword($password)
     {
         $this->password = $password;
-
         return $this;
     }
-
-
-
 
 }

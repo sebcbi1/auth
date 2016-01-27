@@ -2,3 +2,4 @@ vendor/
 reports/
 composer.lock
 .idea/
+log/

@@ -14,11 +14,21 @@ use Auth\AuthenticationMethods\Session\SessionCredentials;
 class SessionAuthenticationTest extends \PHPUnit_Framework_TestCase
 {
 
+    public function setUp()
+    {
+        $sessionCredentials = new SessionCredentials('testSessionId');
+        $sessionCredentials->setSessionUserId(48);
+        session_write_close();
+    }
+
     public function testCheck()
     {
-        $sessionCredentials = new SessionCredentials('tiausnretnrastpost');
-        $sessionCredentials->setUserId(48);
-        $sessionAuthentication = new SessionAuthentication($sessionCredentials);
+        $sessionAuthentication = new SessionAuthentication(new SessionCredentials('testSessionId'));
         $this->assertEquals(48, $sessionAuthentication->check());
+        session_write_close();
+
+        $sessionAuthentication = new SessionAuthentication(new SessionCredentials('invalidSessionId'));
+        $this->assertEquals(false, $sessionAuthentication->check());
+        session_write_close();
     }
 }

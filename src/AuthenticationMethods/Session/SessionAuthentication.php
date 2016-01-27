@@ -23,8 +23,8 @@ class SessionAuthentication implements AuthenticationMethodInterface
 
     public function check()
     {
-        if (!empty($this->credentials->getUserId())) {
-            return $this->credentials->getUserId();
+        if ($userId = $this->credentials->getSessionUserId()) {
+            return $userId;
         }
         return false;
     }

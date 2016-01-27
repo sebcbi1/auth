@@ -17,6 +17,11 @@ class User implements UserInterface
     private $id;
 
     /**
+     * @var CredentialsList
+     */
+    private $credentialsList;
+
+    /**
      * @return id
      */
     public function getId()
@@ -32,6 +37,11 @@ class User implements UserInterface
     {
         $this->id = $id;
         return $this;
+    }
+
+    public function addCredentials(Credentials $credentials)
+    {
+        $this->credentialsList->append($credentials);
     }
 
 }

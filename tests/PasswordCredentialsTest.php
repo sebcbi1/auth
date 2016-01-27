@@ -8,11 +8,9 @@
 
 namespace Auth;
 
-
-use Auth\AuthenticationMethods\Password\PasswordAuthentication;
 use Auth\AuthenticationMethods\Password\PasswordCredentials;
 
-class PasswordAuthenticationTest extends \PHPUnit_Framework_TestCase
+class PasswordCredentialTest extends \PHPUnit_Framework_TestCase
 {
     private $passwordGateway;
 
@@ -24,7 +22,6 @@ class PasswordAuthenticationTest extends \PHPUnit_Framework_TestCase
         $passwordCredentials->setUserId(48);
         $passwordCredentials->setPassword(password_hash("password", PASSWORD_DEFAULT));
         $passwordCredentials->setEmail('user@mail.com');
-
 
         $closure = function($email) use ($passwordCredentials) {
             if ($email == 'user@mail.com') {
@@ -45,17 +42,20 @@ class PasswordAuthenticationTest extends \PHPUnit_Framework_TestCase
 
         $passwordCredentials->setEmail('user@mail.com');
         $passwordCredentials->setPassword('password');
-        $passwordAuthentication = new PasswordAuthentication($passwordCredentials, $this->passwordGateway);
-        $this->assertEquals(48, $passwordAuthentication->check());
+        $this->assertEquals(true, $passwordCredentials->verify());
+        $this->assertEquals(48, $passwordCredentials->getUserId());
 
+        $passwordCredentials = new PasswordCredentials($this->passwordGateway);
         $passwordCredentials->setEmail('invaliduser@mail.com');
         $passwordCredentials->setPassword('password');
-        $passwordAuthentication = new PasswordAuthentication($passwordCredentials, $this->passwordGateway);
-        $this->assertEquals(false, $passwordAuthentication->check());
+        $this->assertEquals(false, $passwordCredentials->verify());
+        $this->assertNull($passwordCredentials->getUserId());
 
+        $passwordCredentials = new PasswordCredentials($this->passwordGateway);
         $passwordCredentials->setEmail('user@mail.com');
         $passwordCredentials->setPassword('invalidpassword');
-        $passwordAuthentication = new PasswordAuthentication($passwordCredentials, $this->passwordGateway);
-        $this->assertEquals(false, $passwordAuthentication->check());
+        $this->assertEquals(false, $passwordCredentials->verify());
+        $this->assertNull($passwordCredentials->getUserId());
+
     }
 }

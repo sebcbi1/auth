@@ -12,19 +12,16 @@ use Auth\Credentials;
 
 class SessionCredentials extends Credentials
 {
-    /**
-     * @var int
-     */
-    private $userId;
 
     /**
      * @var string;
      */
     private $sessionId;
 
-
     public function __construct($sessionId = null)
     {
+        $this->authenticationMethod = new SessionAuthentication($this);
+
         if (php_sapi_name() == 'cli') {
             ini_set('session.use_cookies', 0);
             ini_set("session.use_only_cookies", 0);
@@ -54,17 +51,17 @@ class SessionCredentials extends Credentials
     /**
      * @return int
      */
-    public function getUserId()
+    public function getSessionUserId()
     {
         $this->sessionStart();
-        return $_SESSION['userId'];
+        return isset($_SESSION['userId']) ? $_SESSION['userId'] : null;
     }
 
     /**
      * @param int $userId
      * @return SessionCredentials
      */
-    public function setUserId($userId)
+    public function setSessionUserId($userId)
     {
         $this->sessionStart();
         $this->userId = $userId;
@@ -80,5 +77,6 @@ class SessionCredentials extends Credentials
         $this->sessionStart();
         return $this->sessionId;
     }
+
 
 }
