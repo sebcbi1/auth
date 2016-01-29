@@ -9,6 +9,8 @@
 namespace Auth;
 
 
+use Auth\AuthenticationMethods\Session\SessionCredentials;
+
 class User implements UserInterface
 {
     /**
@@ -20,6 +22,11 @@ class User implements UserInterface
      * @var CredentialsList
      */
     private $credentialsList;
+
+    public function __construct()
+    {
+        $this->credentialsList = new CredentialsList();
+    }
 
     /**
      * @return id
@@ -42,6 +49,11 @@ class User implements UserInterface
     public function addCredentials(Credentials $credentials)
     {
         $this->credentialsList->append($credentials);
+    }
+
+    public function getCredentials()
+    {
+        return $this->credentialsList;
     }
 
 }

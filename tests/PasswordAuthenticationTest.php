@@ -14,16 +14,15 @@ use Auth\AuthenticationMethods\Password\PasswordCredentials;
 
 class PasswordAuthenticationTest extends \PHPUnit_Framework_TestCase
 {
-    private $passwordGateway;
+    private $passwordRepository;
 
     public function setup()
     {
-        $this->passwordGateway = $this->getMock('Auth\\AuthenticationMethods\\Password\\PasswordGatewayInterface');
 
-        $passwordCredentials = new PasswordCredentials($this->passwordGateway);
+        $passwordCredentials = new PasswordCredentials();
         $passwordCredentials->setUserId(48);
         $passwordCredentials->setPassword(password_hash("password", PASSWORD_DEFAULT));
-        $passwordCredentials->setEmail('user@mail.com');
+        $passwordCredentials->setLoginName('user@mail.com');
 
 
         $closure = function($email) use ($passwordCredentials) {
@@ -33,7 +32,8 @@ class PasswordAuthenticationTest extends \PHPUnit_Framework_TestCase
             return false;
         };
 
-        $this->passwordGateway->expects($this->any())
+        $this->passwordRepository = $this->getMock('Auth\\AuthenticationMethods\\Password\\PasswordRepositoryInterface');
+        $this->passwordRepository->expects($this->any())
              ->method('findByEmail')
              ->will($this->returnCallback($closure));
 
@@ -41,21 +41,21 @@ class PasswordAuthenticationTest extends \PHPUnit_Framework_TestCase
 
     public function testCheck()
     {
-        $passwordCredentials = new PasswordCredentials($this->passwordGateway);
+        $passwordCredentials = new PasswordCredentials();
 
-        $passwordCredentials->setEmail('user@mail.com');
+        $passwordCredentials->setLoginName('user@mail.com');
         $passwordCredentials->setPassword('password');
-        $passwordAuthentication = new PasswordAuthentication($passwordCredentials, $this->passwordGateway);
+        $passwordAuthentication = new PasswordAuthentication($passwordCredentials, $this->passwordRepository);
         $this->assertEquals(48, $passwordAuthentication->check());
 
-        $passwordCredentials->setEmail('invaliduser@mail.com');
+        $passwordCredentials->setLoginName('invaliduser@mail.com');
         $passwordCredentials->setPassword('password');
-        $passwordAuthentication = new PasswordAuthentication($passwordCredentials, $this->passwordGateway);
+        $passwordAuthentication = new PasswordAuthentication($passwordCredentials, $this->passwordRepository);
         $this->assertEquals(false, $passwordAuthentication->check());
 
-        $passwordCredentials->setEmail('user@mail.com');
+        $passwordCredentials->setLoginName('user@mail.com');
         $passwordCredentials->setPassword('invalidpassword');
-        $passwordAuthentication = new PasswordAuthentication($passwordCredentials, $this->passwordGateway);
+        $passwordAuthentication = new PasswordAuthentication($passwordCredentials, $this->passwordRepository);
         $this->assertEquals(false, $passwordAuthentication->check());
     }
 }

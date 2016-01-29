@@ -12,19 +12,19 @@ use Auth\AuthenticationMethodInterface;
 
 class PasswordAuthentication implements AuthenticationMethodInterface
 {
-    private $gateway;
+    private $repository;
 
     private $credentials;
 
-    public function __construct(PasswordCredentials $credentials, PasswordGatewayInterface $gateway)
+    public function __construct(PasswordCredentials $credentials, PasswordRepositoryInterface $repository)
     {
         $this->credentials = $credentials;
-        $this->gateway = $gateway;
+        $this->repository = $repository;
     }
 
     public function check()
     {
-        $savedCredentials = $this->gateway->findByEmail($this->credentials->getEmail());
+        $savedCredentials = $this->repository->findByEmail($this->credentials->getLoginName());
         if ($savedCredentials instanceof PasswordCredentials && password_verify($this->credentials->getPassword(), $savedCredentials->getPassword())) {
             return $savedCredentials->getUserId();
         }

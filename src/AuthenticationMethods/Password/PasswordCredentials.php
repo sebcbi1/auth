@@ -15,8 +15,9 @@ class PasswordCredentials extends Credentials
 
     /**
      * @var string
+     * should be unique (can be email ...)
      */
-    private $email;
+    private $loginName;
 
     /**
      * @var password
@@ -24,26 +25,26 @@ class PasswordCredentials extends Credentials
     private $password;
 
 
-    public function __construct(PasswordGatewayInterface $gateway)
-    {
-        $this->authenticationMethod = new PasswordAuthentication($this, $gateway);
-    }
+//    public function __construct(PasswordRepositoryInterface $repository)
+//    {
+//        $this->authenticationMethod = new PasswordAuthentication($this, $repository);
+//    }
 
     /**
      * @return string
      */
-    public function getEmail()
+    public function getLoginName()
     {
-        return $this->email;
+        return $this->loginName;
     }
 
     /**
-     * @param string $email
+     * @param string $loginName
      * @return PasswordCredentials
      */
-    public function setEmail($email)
+    public function setLoginName($loginName)
     {
-        $this->email = $email;
+        $this->loginName = $loginName;
         return $this;
     }
 

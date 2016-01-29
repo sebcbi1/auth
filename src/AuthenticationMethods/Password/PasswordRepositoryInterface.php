@@ -9,7 +9,7 @@
 namespace Auth\AuthenticationMethods\Password;
 
 
-interface PasswordGatewayInterface
+interface PasswordRepositoryInterface
 {
     public function findByEmail();
 }

@@ -14,18 +14,27 @@ use Auth\AuthenticationMethodInterface;
 class SessionAuthentication implements AuthenticationMethodInterface
 {
 
+    private $repository;
+
     private $credentials;
 
-    public function __construct(SessionCredentials $credentials)
+    public function __construct(SessionCredentials $credentials, SessionRepositoryInterface $sessionRepository = null)
     {
         $this->credentials = $credentials;
+
+        if (is_null($sessionRepository)) {
+            $sessionRepository = new SessionRepository();
+        }
+        $this->repository = $sessionRepository;
     }
 
     public function check()
     {
-        if ($userId = $this->credentials->getSessionUserId()) {
-            return $userId;
+        $savedCredentials = $this->repository->getBySessionId($this->credentials->getSessionId());
+        if ($savedCredentials) {
+            return $savedCredentials->getUserId();
         }
-        return false;
     }
+
+
 }

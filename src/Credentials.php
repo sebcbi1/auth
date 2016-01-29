@@ -16,11 +16,6 @@ class Credentials
     protected $userId;
 
     /**
-     * @var AuthenticationMethodInterface
-     */
-    protected $authenticationMethod;
-
-    /**
      * @return int
      */
     public function getUserId()
@@ -36,36 +31,6 @@ class Credentials
     {
         $this->userId = $userId;
         return $this;
-    }
-
-    /**
-     * @return AuthenticationMethodInterface
-     */
-    public function getAuthenticationMethod()
-    {
-        return $this->authenticationMethod;
-    }
-
-    /**
-     * @param AuthenticationMethodInterface $authenticationMethod
-     * @return $this
-     */
-    public function setAuthenticationMethod(AuthenticationMethodInterface $authenticationMethod)
-    {
-        $this->authenticationMethod = $authenticationMethod;
-        return $this;
-    }
-
-    public function verify()
-    {
-        if (!is_object($this->authenticationMethod)) {
-            throw new \Exception('authentication method not set');
-        }
-        if ($userId = $this->authenticationMethod->check()) {
-            $this->setUserId($userId);
-            return true;
-        }
-        return false;
     }
 
 }

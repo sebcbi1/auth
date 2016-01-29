@@ -12,7 +12,6 @@ use Auth\Credentials;
 
 class SessionCredentials extends Credentials
 {
-
     /**
      * @var string;
      */
@@ -20,13 +19,11 @@ class SessionCredentials extends Credentials
 
     public function __construct($sessionId = null)
     {
-        $this->authenticationMethod = new SessionAuthentication($this);
+//        if (is_null($sessionRepository)) {
+//            $sessionRepository = new SessionRepository();
+//        }
+//        $this->authenticationMethod = new SessionAuthentication($this, $sessionRepository);
 
-        if (php_sapi_name() == 'cli') {
-            ini_set('session.use_cookies', 0);
-            ini_set("session.use_only_cookies", 0);
-            ini_set("session.cache_limiter", "");
-        }
         if (!empty($sessionId)) {
             $this->sessionId = $sessionId;
         } else {
@@ -36,47 +33,24 @@ class SessionCredentials extends Credentials
         }
     }
 
-    private function sessionStart() {
-        if (PHP_SESSION_NONE === session_status()) {
-            if (!empty($this->sessionId)) {
-                session_id($this->sessionId);
-            }
-            session_start();
-            if (empty($this->sessionId)) {
-                $this->sessionId = session_id();
-            }
-        }
-    }
-
-    /**
-     * @return int
-     */
-    public function getSessionUserId()
-    {
-        $this->sessionStart();
-        return isset($_SESSION['userId']) ? $_SESSION['userId'] : null;
-    }
-
-    /**
-     * @param int $userId
-     * @return SessionCredentials
-     */
-    public function setSessionUserId($userId)
-    {
-        $this->sessionStart();
-        $this->userId = $userId;
-        $_SESSION['userId'] = $this->userId;
-        return $this;
-    }
 
     /**
      * @return string
      */
     public function getSessionId()
     {
-        $this->sessionStart();
         return $this->sessionId;
     }
 
+
+    /**
+     * @param $sessionId
+     * @return $this
+     */
+    public function setSessionId($sessionId)
+    {
+        $this->sessionId = $sessionId;
+        return $this;
+    }
 
 }
