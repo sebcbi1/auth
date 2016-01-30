@@ -1,5 +1,5 @@
 {
-
+    "name": "sebcbi1/auth",
     "autoload": {
         "psr-4": {
             "Auth\\": "src/"
