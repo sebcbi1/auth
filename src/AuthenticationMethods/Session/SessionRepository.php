@@ -23,12 +23,13 @@ class SessionRepository implements SessionRepositoryInterface
         }
     }
 
-    public function getBySessionId($sessionId)
+    public function getBySessionId($sessionId = null)
     {
         $this->sessionStart($sessionId);
         if (empty($_SESSION[self::USER_SESSION_KEY])) {
             return false;
         }
+        $sessionId = empty($sessionId) ? session_id() : $sessionId;
         $credentials = new SessionCredentials($sessionId, $this);
         $credentials->setUserId($_SESSION[self::USER_SESSION_KEY]);
         return $credentials;
@@ -53,5 +54,14 @@ class SessionRepository implements SessionRepositoryInterface
                 $sessionId = session_id();
             }
         }
+    }
+
+    public function destroy(SessionCredentials $credentials)
+    {
+        if (PHP_SESSION_ACTIVE === session_status() && session_id() == $credentials->getSessionId()) {
+            session_destroy();
+            return true;
+        }
+        return false;
     }
 }
