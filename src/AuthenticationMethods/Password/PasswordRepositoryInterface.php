@@ -11,5 +11,5 @@ namespace Auth\AuthenticationMethods\Password;
 
 interface PasswordRepositoryInterface
 {
-    public function findByEmail();
+    public function findByLoginName();
 }

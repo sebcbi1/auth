@@ -34,7 +34,7 @@ class PasswordAuthenticationTest extends \PHPUnit_Framework_TestCase
 
         $this->passwordRepository = $this->getMock('Auth\\AuthenticationMethods\\Password\\PasswordRepositoryInterface');
         $this->passwordRepository->expects($this->any())
-             ->method('findByEmail')
+             ->method('findByLoginName')
              ->will($this->returnCallback($closure));
 
     }

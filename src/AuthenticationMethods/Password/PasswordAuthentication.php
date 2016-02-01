@@ -24,7 +24,7 @@ class PasswordAuthentication implements AuthenticationMethodInterface
 
     public function check()
     {
-        $savedCredentials = $this->repository->findByEmail($this->credentials->getLoginName());
+        $savedCredentials = $this->repository->findByLoginName($this->credentials->getLoginName());
         if ($savedCredentials instanceof PasswordCredentials && password_verify($this->credentials->getPassword(), $savedCredentials->getPassword())) {
             return $savedCredentials->getUserId();
         }
