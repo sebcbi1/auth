@@ -43,7 +43,7 @@ class SessionRepository implements SessionRepositoryInterface
         }
     }
 
-    private function sessionStart(&$sessionId) {
+    protected function sessionStart(&$sessionId) {
         if (PHP_SESSION_NONE === session_status()) {
             if (!empty($sessionId)) {
                 session_id($sessionId);
