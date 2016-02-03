@@ -19,17 +19,8 @@ class SessionCredentials extends Credentials
 
     public function __construct($sessionId = null)
     {
-//        if (is_null($sessionRepository)) {
-//            $sessionRepository = new SessionRepository();
-//        }
-//        $this->authenticationMethod = new SessionAuthentication($this, $sessionRepository);
-
         if (!empty($sessionId)) {
             $this->sessionId = $sessionId;
-        } else {
-            if (isset($_COOKIE) && isset($_COOKIE[session_name()])) {
-                $this->sessionId = $_COOKIE[session_name()];
-            }
         }
     }
 

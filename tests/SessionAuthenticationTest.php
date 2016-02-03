@@ -17,34 +17,30 @@ class SessionAuthenticationTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $sessionCredentials = new SessionCredentials('testSessionId');
-        $repo = new SessionRepository();
-        $sessionCredentials->setUserId(48);
-        $repo->save($sessionCredentials);
-        session_write_close();
+        $repo = new SessionRepository('testSessionId');
+        $repo->set('userId', 48);
+        $repo->close();
     }
 
     public function testCheck()
     {
         //given session id
-        $sessionAuthentication = new SessionAuthentication(new SessionCredentials('testSessionId'));
+        $repo = new SessionRepository('testSessionId');
+        $sessionAuthentication = new SessionAuthentication($repo);
         $this->assertEquals(48, $sessionAuthentication->check());
-        session_write_close();
+        $repo->close();
 
         //given invalid session id
-        $sessionAuthentication = new SessionAuthentication(new SessionCredentials('invalidSessionId'));
+        $repo = new SessionRepository('invalidSessionId');
+        $sessionAuthentication = new SessionAuthentication($repo);
         $this->assertEquals(false, $sessionAuthentication->check());
-        session_write_close();
+        $repo->close();
 
         // without session id , let php generate new one
-        $sessionAuthentication = new SessionAuthentication(new SessionCredentials());
+        $repo = new SessionRepository();
+        $sessionAuthentication = new SessionAuthentication(new SessionRepository());
         $this->assertEquals(false, $sessionAuthentication->check());
-        session_write_close();
+        $repo->close();
 
-        // session id from cookie
-        $_COOKIE[session_name()] = 'invalidSessionId';
-        $sessionAuthentication = new SessionAuthentication(new SessionCredentials());
-        $this->assertEquals(false, $sessionAuthentication->check());
-        session_write_close();
     }
 }

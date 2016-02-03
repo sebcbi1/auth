@@ -16,12 +16,10 @@ class SessionAuthentication implements AuthenticationMethodInterface
 
     private $repository;
 
-    private $credentials;
+    protected $sessionUserKey = 'userId';
 
-    public function __construct(SessionCredentials $credentials, SessionRepositoryInterface $sessionRepository = null)
+    public function __construct(SessionRepositoryInterface $sessionRepository = null)
     {
-        $this->credentials = $credentials;
-
         if (is_null($sessionRepository)) {
             $sessionRepository = new SessionRepository();
         }
@@ -30,10 +28,10 @@ class SessionAuthentication implements AuthenticationMethodInterface
 
     public function check()
     {
-        $savedCredentials = $this->repository->getBySessionId($this->credentials->getSessionId());
-        if ($savedCredentials) {
-            return $savedCredentials->getUserId();
+        if ($userId = $this->repository->get($this->sessionUserKey)) {
+            return $userId;
         }
+        return false;
     }
 
 

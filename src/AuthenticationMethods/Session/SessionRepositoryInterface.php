@@ -10,7 +10,13 @@ namespace Auth\AuthenticationMethods\Session;
 
 interface SessionRepositoryInterface
 {
-    public function getBySessionId($sessionId);
+    public function getSessionId();
 
-    public function save(SessionCredentials $credentials);
+    public function setSessionId($sessionId);
+
+    public function get($key);
+
+    public function has($key);
+
+    public function set($key, $value);
 }
