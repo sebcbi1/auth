@@ -9,6 +9,7 @@
 namespace Auth\AuthenticationMethods\Password;
 
 use Auth\AuthenticationMethodInterface;
+use Auth\Credentials;
 
 class PasswordAuthentication implements AuthenticationMethodInterface
 {
@@ -22,12 +23,12 @@ class PasswordAuthentication implements AuthenticationMethodInterface
         $this->repository = $repository;
     }
 
-    public function check()
+    public function verify()
     {
         $savedCredentials = $this->repository->findByLoginName($this->credentials->getLoginName());
         if ($savedCredentials instanceof PasswordCredentials && password_verify($this->credentials->getPassword(), $savedCredentials->getPassword())) {
-            return $savedCredentials->getUserId();
+            return $savedCredentials;
         }
-        return false;
+        return new Credentials();
     }
 }

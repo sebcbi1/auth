@@ -43,11 +43,10 @@ class TokenAuthenticationTest extends \PHPUnit_Framework_TestCase
         $tokenCredentials = new TokenCredentials();
         $tokenCredentials->setToken('token');
         $tokenAuthentication = new TokenAuthentication($tokenCredentials, $this->tokenRepository);
-        $this->assertEquals(48, $tokenAuthentication->check());
+        $this->assertEquals(48, $tokenAuthentication->verify()->getUserId());
 
         $tokenCredentials->setToken('invalidToken');
         $tokenAuthentication = new TokenAuthentication($tokenCredentials, $this->tokenRepository);
-        $this->assertEquals(false, $tokenAuthentication->check());
-
+        $this->assertNull($tokenAuthentication->verify()->getUserId());
     }
 }

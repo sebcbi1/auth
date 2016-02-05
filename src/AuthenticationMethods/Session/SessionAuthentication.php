@@ -10,6 +10,7 @@
 namespace Auth\AuthenticationMethods\Session;
 
 use Auth\AuthenticationMethodInterface;
+use Auth\Credentials;
 
 class SessionAuthentication implements AuthenticationMethodInterface
 {
@@ -26,12 +27,15 @@ class SessionAuthentication implements AuthenticationMethodInterface
         $this->repository = $sessionRepository;
     }
 
-    public function check()
+    public function verify()
     {
         if ($userId = $this->repository->get($this->sessionUserKey)) {
-            return $userId;
+            $credentials = new SessionCredentials();
+            $credentials->setUserId($userId);
+            $credentials->setSessionId($this->repository->getSessionId());
+            return $credentials;
         }
-        return false;
+        return new Credentials();
     }
 
 

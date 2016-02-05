@@ -8,7 +8,7 @@
 
 namespace Auth;
 
-class Credentials
+class Credentials implements CredentialsInterface
 {
     /**
      * @var int

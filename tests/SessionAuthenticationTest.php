@@ -27,19 +27,19 @@ class SessionAuthenticationTest extends \PHPUnit_Framework_TestCase
         //given session id
         $repo = new SessionRepository('testSessionId');
         $sessionAuthentication = new SessionAuthentication($repo);
-        $this->assertEquals(48, $sessionAuthentication->check());
+        $this->assertEquals(48, $sessionAuthentication->verify()->getUserId());
         $repo->close();
 
         //given invalid session id
         $repo = new SessionRepository('invalidSessionId');
         $sessionAuthentication = new SessionAuthentication($repo);
-        $this->assertEquals(false, $sessionAuthentication->check());
+        $this->assertNull($sessionAuthentication->verify()->getUserId());
         $repo->close();
 
         // without session id , let php generate new one
         $repo = new SessionRepository();
         $sessionAuthentication = new SessionAuthentication(new SessionRepository());
-        $this->assertEquals(false, $sessionAuthentication->check());
+        $this->assertNull($sessionAuthentication->verify()->getUserId());
         $repo->close();
 
     }

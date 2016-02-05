@@ -46,16 +46,16 @@ class PasswordAuthenticationTest extends \PHPUnit_Framework_TestCase
         $passwordCredentials->setLoginName('user@mail.com');
         $passwordCredentials->setPassword('password');
         $passwordAuthentication = new PasswordAuthentication($passwordCredentials, $this->passwordRepository);
-        $this->assertEquals(48, $passwordAuthentication->check());
+        $this->assertEquals(48, $passwordAuthentication->verify()->getUserId());
 
         $passwordCredentials->setLoginName('invaliduser@mail.com');
         $passwordCredentials->setPassword('password');
         $passwordAuthentication = new PasswordAuthentication($passwordCredentials, $this->passwordRepository);
-        $this->assertEquals(false, $passwordAuthentication->check());
+        $this->assertNull($passwordAuthentication->verify()->getUserId());
 
         $passwordCredentials->setLoginName('user@mail.com');
         $passwordCredentials->setPassword('invalidpassword');
         $passwordAuthentication = new PasswordAuthentication($passwordCredentials, $this->passwordRepository);
-        $this->assertEquals(false, $passwordAuthentication->check());
+        $this->assertNull($passwordAuthentication->verify()->getUserId());
     }
 }

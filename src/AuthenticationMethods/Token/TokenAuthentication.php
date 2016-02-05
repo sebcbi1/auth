@@ -9,6 +9,7 @@
 namespace Auth\AuthenticationMethods\Token;
 
 use Auth\AuthenticationMethodInterface;
+use Auth\Credentials;
 
 class TokenAuthentication implements AuthenticationMethodInterface
 {
@@ -22,12 +23,15 @@ class TokenAuthentication implements AuthenticationMethodInterface
         $this->repository = $repository;
     }
 
-    public function check()
+
+    public function verify()
     {
         $savedCredentials = $this->repository->findByToken($this->credentials->getToken());
         if ($savedCredentials) {
-            return $savedCredentials->getUserId();
+            return $savedCredentials;
         }
-        return false;
+        return new Credentials();
     }
+
+
 }

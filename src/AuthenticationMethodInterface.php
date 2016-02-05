@@ -11,5 +11,8 @@ namespace Auth;
 
 interface AuthenticationMethodInterface
 {
-    public function check();
+    /**
+     * @return CredentialsInterface
+     */
+    public function verify();
 }
