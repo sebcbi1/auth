@@ -10,7 +10,7 @@ namespace Auth\AuthenticationMethods\Password;
 
 use Auth\Credentials;
 
-class PasswordCredentials extends Credentials
+class PasswordCredentials extends Credentials implements PasswordCredentialsInterface
 {
 
     /**

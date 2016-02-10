@@ -9,7 +9,6 @@
 namespace Auth\AuthenticationMethods\Token;
 
 use Auth\AuthenticationMethodInterface;
-use Auth\Credentials;
 
 class TokenAuthentication implements AuthenticationMethodInterface
 {
@@ -17,7 +16,7 @@ class TokenAuthentication implements AuthenticationMethodInterface
 
     private $credentials;
 
-    public function __construct(TokenCredentials $credentials, TokenRepositoryInterface $repository)
+    public function __construct(TokenCredentialsInterface $credentials, TokenRepositoryInterface $repository)
     {
         $this->credentials = $credentials;
         $this->repository = $repository;
@@ -28,9 +27,9 @@ class TokenAuthentication implements AuthenticationMethodInterface
     {
         $savedCredentials = $this->repository->findByToken($this->credentials->getToken());
         if ($savedCredentials) {
-            return $savedCredentials;
+            $this->credentials->setUserId($savedCredentials->getUserId());
         }
-        return new Credentials();
+        return $this->credentials;
     }
 
 

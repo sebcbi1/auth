@@ -10,7 +10,7 @@ namespace Auth\AuthenticationMethods\Token;
 
 use Auth\Credentials;
 
-class TokenCredentials extends Credentials
+class TokenCredentials extends Credentials implements TokenCredentialsInterface
 {
 
     /**

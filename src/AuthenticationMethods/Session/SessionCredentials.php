@@ -10,7 +10,7 @@ namespace Auth\AuthenticationMethods\Session;
 
 use Auth\Credentials;
 
-class SessionCredentials extends Credentials
+class SessionCredentials extends Credentials implements SessionCredentialsInterface
 {
     /**
      * @var string;
