@@ -17,6 +17,12 @@ class SessionCredentials extends Credentials
      */
     private $sessionId;
 
+    /**
+     * @var string;
+     */
+    protected $sessionKey = 'userId';
+
+
     public function __construct($sessionId = null)
     {
         if (!empty($sessionId)) {
@@ -24,6 +30,13 @@ class SessionCredentials extends Credentials
         }
     }
 
+    /**
+     * @return string
+     */
+    public function getSessionKey()
+    {
+        return $this->sessionKey;
+    }
 
     /**
      * @return string

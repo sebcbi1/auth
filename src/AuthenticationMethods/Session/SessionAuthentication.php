@@ -29,8 +29,8 @@ class SessionAuthentication implements AuthenticationMethodInterface
 
     public function verify()
     {
-        if ($userId = $this->repository->get($this->sessionUserKey)) {
-            $credentials = new SessionCredentials();
+        $credentials = new SessionCredentials();
+        if ($userId = $this->repository->get($this->credentials->getSessionKey())) {
             $credentials->setUserId($userId);
             $credentials->setSessionId($this->repository->getSessionId());
             return $credentials;
