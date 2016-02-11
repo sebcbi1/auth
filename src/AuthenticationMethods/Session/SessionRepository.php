@@ -56,6 +56,16 @@ class SessionRepository implements SessionRepositoryInterface
         return (!empty($_SESSION[$key])) ? $_SESSION[$key] : false;
     }
 
+    
+	public function delete($key)
+	{
+	    $this->start();
+	    if ($this->has($key)) {
+		    unset($_SESSION[$key]);
+		}
+	}
+
+	
     public function start() {
         if (PHP_SESSION_NONE === session_status()) {
             if (!empty($this->sessionId)) {
